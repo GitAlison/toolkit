@@ -3,7 +3,7 @@ import { PiHeartFill } from "react-icons/pi";
 import { JSX, useEffect, useState } from "react";
 import ListFeatures, { FEATURES_LIST } from "./features/ListFeatures";
 import { GrTools } from "react-icons/gr";
-import { settingsStore } from "./store";
+import { settingsStore } from "./store/storeSettings";
 
 
 function App() {

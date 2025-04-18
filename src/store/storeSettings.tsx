@@ -40,13 +40,17 @@ export const featuresStore = create<FeatureStore>()(
 interface Settings {
     featureOpenOnLoad: string;
     featuresAutoCopy: string[];
+    featureStoreHistory: string[];
 }
 
 interface SettingStore {
     settings: Settings;
     setSettings: (settings: Settings) => void;
-    setFeatureAutoCopy: (features: string, isEnabled: boolean) => void;
+    setFeatureAutoCopy: (feature: string, isEnabled: boolean) => void;
+    setFeatureStoreHistory: (feature: string, isEnabled: boolean) => void;
     isFeatureAutoCopy(feature: string): boolean;
+    isFeatureStoreHistory(feature: string): boolean;
+
 }
 
 export const settingsStore = create<SettingStore>()(
@@ -55,11 +59,19 @@ export const settingsStore = create<SettingStore>()(
             settings: {
                 featureOpenOnLoad: '',
                 featuresAutoCopy: [],
+                featureStoreHistory: []
             },
             isFeatureAutoCopy: (feature: string) => {
                 if (get().settings?.featuresAutoCopy) {
                     const featuresAutoCopy = [...get().settings?.featuresAutoCopy]
                     return featuresAutoCopy.includes(feature) ? true : false;
+                }
+                return false
+            },
+            isFeatureStoreHistory: (feature: string) => {
+                if (get().settings?.featureStoreHistory) {
+                    const featureStoreHistory = [...get().settings?.featureStoreHistory]
+                    return featureStoreHistory.includes(feature) ? true : false;
                 }
                 return false
             },
@@ -83,6 +95,26 @@ export const settingsStore = create<SettingStore>()(
                     }
                 )
 
+            },
+            setFeatureStoreHistory(feature: string, isEnabled: boolean) {
+                let featureStoreHistory = get().settings.featureStoreHistory || []
+
+                if (isEnabled) {
+                    if (!featureStoreHistory.includes(feature)) {
+                        featureStoreHistory.push(feature)
+                    }
+                } else {
+                    featureStoreHistory.splice(featureStoreHistory.indexOf(feature), 1);
+                }
+                return set(
+                    {
+                        settings: {
+                            ...get().settings,
+                            featureStoreHistory: [...featureStoreHistory]
+                        }
+                    }
+                )
+
             }
         }),
         {
@@ -92,50 +124,3 @@ export const settingsStore = create<SettingStore>()(
     ),
 )
 
-interface HistoryGenerated {
-    value: any;
-    feature: string;
-    copied: boolean;
-    generatedAt: Date;
-}
-
-interface HistoryGeneratedStore {
-    history: HistoryGenerated[];
-    addRecord: (record: HistoryGenerated) => void;
-}
-
-export const historyGeneratedStore = create<HistoryGeneratedStore>()(
-    persist(
-        (set, get) => ({
-            history: [],
-            addRecord(record: HistoryGenerated) {
-                const newRecord = {
-                    ...record,
-                    generatedAt: new Date(),
-                }
-                return set(
-                    (state) => ({
-                        history: [...state.history, newRecord]
-                    })
-                )
-            },
-            // addRecord(): (record: HistoryGenerated) => {
-            //     const newRecord = {
-            //         value: record.value,
-            //         feature: record.feature,
-            //         copied: record.copied,
-            //         generatedAt: new Date()
-            //     }
-            //     return set(
-            //         (state) => ({
-            //             history: [...state.history, newRecord]
-            //         })
-            //     )
-            // }
-        }),
-
-        {
-            name: 'settings-store', // name of the item in the storage (must be unique)
-            storage: createJSONStorage(() => localStorage), // (optional) by default, 'localStorage' is used
-        }
-    ));

@@ -5,7 +5,7 @@ import { ImMagicWand } from 'react-icons/im'
 import { IoCheckmarkOutline } from 'react-icons/io5'
 import { LuCopy } from 'react-icons/lu'
 
-import { settingsStore } from '../../store'
+import { settingsStore } from '../../store/storeSettings'
 import { Features } from '../features.enum'
 import generateCpf from './cpfGenerator'
 import generateValidCNPJ from './cnpjGenerator'

@@ -3,7 +3,7 @@ import { JSX, useEffect, useState } from 'react';
 import GenerateUUID from './GenerateUUID/GenerateUUIDButton'
 import { Features } from './features.enum';
 import GenerateUUIDPage from './GenerateUUID/GenerateUUIDPage';
-import { featuresStore } from '../store';
+import { featuresStore } from '../store/storeSettings';
 import GenerateCpfCnpjButton from './GenerateCpfCnpj/GenerateCpfCnpjButton';
 import GenerateCpfCnpjPage from './GenerateCpfCnpj/GenerateCpfCnpjPage';
 

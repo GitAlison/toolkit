@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { CiSettings } from 'react-icons/ci';
 import { ImMagicWand } from 'react-icons/im'
 import { IoCheckmarkOutline } from 'react-icons/io5'
 import { LuCopy } from 'react-icons/lu'
-import { settingsStore } from '../../store';
+import { settingsStore } from '../../store/storeSettings';
 import { Features } from '../features.enum';
+import { UUIDGenerated, uuidv4Store } from '../../store/uuidStore';
 
-
-interface GeneratedValue {
-    value: string;
-    copied: boolean;
-    generatedAt: Date;
-}
 
 export default function GenerateUUIDPage() {
 
-    const [list, setList] = useState<GeneratedValue[]>([])
-    const [lastCopy, setLastCopy] = useState<GeneratedValue>()
+    const [list, setList] = useState<UUIDGenerated[]>([])
+    const listDataStorage = uuidv4Store((state) => state.list);
+    const addRecordsToStorage = uuidv4Store((state) => state.addRecords);
+
+    const [lastCopy, setLastCopy] = useState<UUIDGenerated>()
     const settings = settingsStore((state) => state.settings)
     const setFeatureAutoCopy = settingsStore((state) => state.setFeatureAutoCopy)
+    const setFeatureStoreHistory = settingsStore((state) => state.setFeatureStoreHistory)
     const autoCopy = settingsStore((state) => state.isFeatureAutoCopy(Features.UUID_GENERATOR_V4))
+    const isStoreHistory = settingsStore((state) => state.isFeatureStoreHistory(Features.UUID_GENERATOR_V4))
 
-    function copySelectedValue(uuidObject: GeneratedValue) {
+    function copySelectedValue(uuidObject: UUIDGenerated) {
         navigator.clipboard.writeText(uuidObject.value).then(() => {
             setLastCopy(uuidObject);
         }).catch((err) => {
             console.error('Failed to copy: ', err);
         });
     }
-    function copyUUIDHandler(index: number, item: GeneratedValue) {
+    function copyUUIDHandler(index: number, item: UUIDGenerated) {
         const newList = [...list];
         newList[index].copied = true;
         setList(newList);
@@ -37,6 +37,7 @@ export default function GenerateUUIDPage() {
     function checkChecked() {
         return settings.featureOpenOnLoad === Features.UUID_GENERATOR_V4 ? true : false;
     }
+
     function generateHandler() {
         const uuid = crypto.randomUUID();
 
@@ -49,13 +50,28 @@ export default function GenerateUUIDPage() {
         if (autoCopy) {
             copySelectedValue(newUUIDObj);
         }
-        setList((prevList) => {
-            const newList = [newUUIDObj, ...prevList];
+
+        const newList = [newUUIDObj, ...list];
+        if (isStoreHistory) {
+            addRecordsToStorage(newList);
+        }
+
+        setList(() => {
             return newList;
         });
     }
     function handlerSetFeatureAutoCopy(value: boolean) {
         setFeatureAutoCopy(Features.UUID_GENERATOR_V4, value)
+    }
+    function handlerSetStoreHistory(value: boolean) {
+
+        setFeatureStoreHistory(Features.UUID_GENERATOR_V4, value)
+        if (!value) {
+            addRecordsToStorage([])
+        } else {
+            addRecordsToStorage(list)
+        }
+        //setFeatureAutoCopy(Features.UUID_GENERATOR_V4, value)
     }
     function changeOnLoad(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.checked) {
@@ -64,6 +80,13 @@ export default function GenerateUUIDPage() {
             settingsStore.setState({ settings: { ...settings, featureOpenOnLoad: '' } })
         }
     }
+    useEffect(() => {
+        if (listDataStorage.length > 0) {
+            setList(listDataStorage);
+            let lastCopied = listDataStorage.find((item) => item.copied);
+            setLastCopy(lastCopied);
+        }
+    }, [])
     return (
         <div>
             <div className='p-4 border-1 border-base-300 rounded-box flex w-full flex-col'>
@@ -96,7 +119,11 @@ export default function GenerateUUIDPage() {
                                     </label>
                                     <label className="fieldset-label">
                                         <input type="checkbox" checked={checkChecked()} onChange={changeOnLoad} className="checkbox" />
-                                        Open on load
+                                        Open on Load
+                                    </label>
+                                    <label className="fieldset-label">
+                                        <input type="checkbox" checked={isStoreHistory} onChange={(e) => { handlerSetStoreHistory(e.target.checked) }} className="checkbox" />
+                                        Store History
                                     </label>
                                 </li>
                             </ul>
@@ -138,9 +165,7 @@ export default function GenerateUUIDPage() {
                                 <th >
                                     {item.copied ? <span className='flex gap-2 items-center text-success text-right'><IoCheckmarkOutline size={25} /> Copied</span> : null}
                                 </th>
-
                             </tr>
-
                         )}
                     </tbody>
 
