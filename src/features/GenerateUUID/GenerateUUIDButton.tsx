@@ -22,7 +22,6 @@ export default function GenerateUUID(props: IButtonInterface) {
             {props.active}
             <div>
                 <VscFileBinary size={50} />
-
             </div>
             <div className="cursor-pointer" onClick={navigate}>
                 <div>UUID Generator</div>

@@ -17,8 +17,9 @@ export default function GenerateUUIDPage() {
 
     const [list, setList] = useState<GeneratedValue[]>([])
     const [lastCopy, setLastCopy] = useState<GeneratedValue>()
-    const [autoCopy, setAutoCopy] = useState(false);
     const settings = settingsStore((state) => state.settings)
+    const setFeatureAutoCopy = settingsStore((state) => state.setFeatureAutoCopy)
+    const autoCopy = settingsStore((state) => state.isFeatureAutoCopy(Features.UUID_GENERATOR_V4))
 
     function copySelectedValue(uuidObject: GeneratedValue) {
         navigator.clipboard.writeText(uuidObject.value).then(() => {
@@ -27,7 +28,6 @@ export default function GenerateUUIDPage() {
             console.error('Failed to copy: ', err);
         });
     }
-
     function copyUUIDHandler(index: number, item: GeneratedValue) {
         const newList = [...list];
         newList[index].copied = true;
@@ -53,6 +53,9 @@ export default function GenerateUUIDPage() {
             const newList = [newUUIDObj, ...prevList];
             return newList;
         });
+    }
+    function handlerSetFeatureAutoCopy(value: boolean) {
+        setFeatureAutoCopy(Features.UUID_GENERATOR_V4, value)
     }
     function changeOnLoad(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.checked) {
@@ -88,7 +91,7 @@ export default function GenerateUUIDPage() {
                             <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
                                 <li>
                                     <label className="fieldset-label">
-                                        <input id='autoCopy' type="checkbox" checked={autoCopy} onChange={(e) => { setAutoCopy(e.target.checked) }} className="checkbox checkbox-md " />
+                                        <input id='autoCopy' type="checkbox" checked={autoCopy} onChange={(e) => { handlerSetFeatureAutoCopy(e.target.checked) }} className="checkbox checkbox-md " />
                                         Auto Copy
                                     </label>
                                     <label className="fieldset-label">
