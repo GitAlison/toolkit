@@ -17,11 +17,20 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+      CLIENT_ID: ${{ secrets.CLIENT_ID }}
+      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
+      REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
 
     steps:
       # Checkout the repository
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - shell: pwsh
+        env:
+          SUPER_SECRET: ${{ secrets.SuperSecret }}
+        run: |
+          example-command "$env:SUPER_SECRET"
 
       # Setup Nodejs
       - name: Setup Node.js
@@ -60,6 +69,12 @@ jobs:
       - name: 📁 Compact build folder
         run: |
           zip -r build.zip build
+      - shell: pwsh
+        env:
+          SUPER_SECRET: ${{ secrets.CLIENT_ID }}
+        run: |
+          example-command "$env:SUPER_SECRET"
+
 
       - name: Upload & release Extension
         uses: mnao305/chrome-extension-upload@v5.0.0
