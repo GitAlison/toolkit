@@ -25,9 +25,9 @@ jobs:
 
       - shell: pwsh
         env:
-          SUPER_SECRET: ${{ secrets.SuperSecret }}
+          SUPER_SECRET: ${{ secrets.CLIENT_ID }}
         run: |
-          example-command "$env:SUPER_SECRET"
+          echo "$env:SUPER_SECRET"
 
       # Setup Nodejs
       - name: Setup Node.js
@@ -66,11 +66,6 @@ jobs:
       - name: 📁 Compact build folder
         run: |
           zip -r build.zip build
-      - shell: pwsh
-        env:
-          SUPER_SECRET: ${{ secrets.CLIENT_ID }}
-        run: |
-          echo "$env:SUPER_SECRET"
 
 
       - name: Upload & release Extension
