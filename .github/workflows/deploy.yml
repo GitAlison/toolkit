@@ -17,9 +17,6 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-      CLIENT_ID: ${{ secrets.CLIENT_ID }}
-      CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
-      REFRESH_TOKEN: ${{ secrets.REFRESH_TOKEN }}
 
     steps:
       # Checkout the repository
