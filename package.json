@@ -1,13 +1,16 @@
 {
   "name": "toolkit",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "homepage": "https://gitalison.github.io/toolkit",
   "scripts": {
     "dev": "vite",
     "start": "vite",
     "build": "tsc -b && vite build",
+    "build-extension": "tsc -b && vite build --config vite.config.extension.ts",
+    "bump": "node scripts/bump-version.js",
+    "build-and-bump": "npm run build && npm run bump",
     "lint": "eslint .",
     "preview": "vite preview"
   },
@@ -23,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "@types/node": "^22.14.1",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
     "@vitejs/plugin-react": "^4.3.4",

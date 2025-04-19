@@ -121,7 +121,7 @@ export default function GenerateCpfCnpjPage() {
                 </div>
 
             </div>
-            <div className="overflow-x-auto overflow-y-auto" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+            <div className="overflow-x-auto overflow-y-auto table-page">
                 <table className="table table-xs table-zebra">
                     <tbody>
                         {lastCopy &&
