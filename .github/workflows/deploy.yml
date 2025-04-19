@@ -44,19 +44,6 @@ jobs:
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           node scripts/bump-version.js
 
-      - name: 💾 Commit Version
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-
-          if git diff --quiet package.json; then
-            echo "No version changes. Nothing to commit."
-          else
-            git add package.json
-            git commit -m "chore: bump version after release merge [ci skip]"
-            git push
-          fi
-
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -78,11 +65,24 @@ jobs:
         uses: mnao305/chrome-extension-upload@v5.0.0
         with:
           file-path: build.zip
-          extension-id: hogefuga(extension id)
+          extension-id: eidicbpeemnpnffdeinpbffeiccokomg
           client-id: ${{ secrets.CLIENT_ID }}
           client-secret: ${{ secrets.CLIENT_SECRET }}
           refresh-token: ${{ secrets.REFRESH_TOKEN }}
 
+      - name: 💾 Commit Version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git diff --quiet package.json; then
+            echo "No version changes. Nothing to commit."
+          else
+            git add package.json
+            git commit -m "chore: bump version after release merge [ci skip]"
+            git push
+          fi
+          
       - name: 🏷️ Create tag
         if: github.ref == 'refs/heads/main' && success()
         run: |
