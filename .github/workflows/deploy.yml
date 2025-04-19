@@ -70,7 +70,7 @@ jobs:
         env:
           SUPER_SECRET: ${{ secrets.CLIENT_ID }}
         run: |
-          example-command "$env:SUPER_SECRET"
+          echo "$env:SUPER_SECRET"
 
 
       - name: Upload & release Extension
