@@ -27,7 +27,7 @@ jobs:
         env:
           SUPER_SECRET: ${{ secrets.CLIENT_ID }}
         run: |
-          echo "$env:SUPER_SECRET"
+          echo "${{ secrets.CLIENT_ID }} $env:SUPER_SECRET"
 
       # Setup Nodejs
       - name: Setup Node.js
