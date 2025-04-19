@@ -33,9 +33,15 @@ export default function GenerateUUIDPage() {
         newList[index].copied = true;
         setList(newList);
         copySelectedValue(item)
+        storeRecordsToStore(newList);
     }
     function checkChecked() {
         return settings.featureOpenOnLoad === Features.UUID_GENERATOR_V4 ? true : false;
+    }
+    function storeRecordsToStore(list: UUIDGenerated[] = []) {
+        if (isStoreHistory) {
+            addRecordsToStorage(list);
+        }
     }
 
     function generateHandler() {
@@ -52,9 +58,7 @@ export default function GenerateUUIDPage() {
         }
 
         const newList = [newUUIDObj, ...list];
-        if (isStoreHistory) {
-            addRecordsToStorage(newList);
-        }
+        storeRecordsToStore(newList);
 
         setList(() => {
             return newList;
