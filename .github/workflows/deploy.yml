@@ -36,6 +36,26 @@ jobs:
       # Build the project
       - name: Build project
         run: npm run build
+        
+      
+      - name: 🔍 Change Vesions
+        run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          node scripts/bump-version.js
+
+      - name: 💾 Commit Version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git diff --quiet package.json; then
+            echo "No version changes. Nothing to commit."
+          else
+            git add package.json
+            git commit -m "chore: bump version after release merge [ci skip]"
+            git push
+          fi
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -45,3 +65,30 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      # Build the project
+      - name: Build project to extension
+        run: npm run build-extension
+
+      - name: 📁 Compact build folder
+        run: |
+          zip -r build.zip build
+
+      - name: Upload & release Extension
+        uses: mnao305/chrome-extension-upload@v5.0.0
+        with:
+          file-path: build.zip
+          extension-id: hogefuga(extension id)
+          client-id: ${{ secrets.CLIENT_ID }}
+          client-secret: ${{ secrets.CLIENT_SECRET }}
+          refresh-token: ${{ secrets.REFRESH_TOKEN }}
+
+      - name: 🏷️ Create tag
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          echo "Creating tag $TAG"
+
+          git tag $TAG
+          git push origin $TAG

@@ -1,4 +1,13 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
     themes: light --default, dark --prefersdark, synthwave;
+}
+
+body {
+    min-width: 500px;
+}
+
+.table-page {
+    max-height: calc(100vh - 192px);
 }
