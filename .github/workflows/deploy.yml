@@ -27,7 +27,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 22
 
       # Install Dependencies
       - name: Install Dependencies
@@ -36,6 +36,13 @@ jobs:
       # Build the project
       - name: Build project
         run: npm run build
+        
+      
+      - name: 🔍 Change Vesions
+        run: |
+          BRANCH_NAME=${GITHUB_REF##*/}
+          echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+          node scripts/bump-version.js
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
@@ -45,3 +52,26 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: 💾 Commit Version
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+          if git diff --quiet package.json; then
+            echo "No version changes. Nothing to commit."
+          else
+            git add package.json
+            git commit -m "chore: bump version after release merge [ci skip]"
+            git push
+          fi
+          
+      - name: 🏷️ Create tag
+        if: github.ref == 'refs/heads/main' && success()
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          TAG="v$VERSION"
+          echo "Creating tag $TAG"
+
+          git tag $TAG
+          git push origin $TAG
