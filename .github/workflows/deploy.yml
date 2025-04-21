@@ -41,6 +41,7 @@ jobs:
       - name: 🔍 Change Vesions
         run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          export BRANCH_NAME="$BRANCH_NAME"
           echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
           node scripts/bump-version.js
 
