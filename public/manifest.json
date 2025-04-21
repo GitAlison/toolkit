@@ -1,12 +1,12 @@
 {
   "manifest_version": 3,
   "name": "Toolkit",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Toolkit for developers",
   "icons": {
-    "16": "icon.svg",
-    "48": "icon.svg",
-    "128": "icon.svg"
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "action": {
     "default_popup": "index.html"

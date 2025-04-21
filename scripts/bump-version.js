@@ -14,6 +14,9 @@ const manifestPath = path.resolve(__dirname, '../public/manifest.json');
 const pkgRaw = await fs.promises.readFile(pkgPath, 'utf-8');
 const pkg = JSON.parse(pkgRaw);
 
+const manifestRaw = await fs.promises.readFile(manifestPath, 'utf-8');
+const manifest = JSON.parse(manifestRaw);
+
 const currentBranch = process.env.BRANCH_NAME || '';
 
 if (currentBranch !== 'main') {
@@ -67,12 +70,6 @@ await fs.promises.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + '\n');
 console.log(`📦 package.json updated to version: ${pkg.version}`);
 
 // Update manifest.json
-try {
-  const manifestRaw = await fs.promises.readFile(manifestPath, 'utf-8');
-  const manifest = JSON.parse(manifestRaw);
-  manifest.version = newVersion;
-  await fs.promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
-  console.log(`🗂️ manifest.json updated to version: ${newVersion}`);
-} catch (err) {
-  console.warn(`⚠️ Could not update public/manifest.json: ${err.message}`);
-}
+manifest.version = newVersion;
+await fs.promises.writeFile(manifestPath, JSON.stringify(manifest, null, 2) + '\n');
+console.log(`🗂️ manifest.json updated to version: ${newVersion}`);
