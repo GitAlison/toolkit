@@ -62,7 +62,7 @@ jobs:
           if git diff --quiet package.json; then
             echo "No version changes. Nothing to commit."
           else
-            git add package.json
+            git add package.json public/manifest.json
             git commit -m "chore: bump version after release merge [ci skip]"
             git push
           fi
