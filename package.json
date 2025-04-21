@@ -8,6 +8,7 @@
     "dev": "vite",
     "start": "vite",
     "build": "tsc -b && vite build",
+    "build-extension": "tsc -b && vite build --config vite.config.extension.ts",
     "lint": "eslint .",
     "preview": "vite preview"
   },
