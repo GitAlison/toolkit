@@ -4,12 +4,12 @@ import PrivacyPolicy from "./PrivacyPolicy";
 
 
 function App() {
-  const [route] = useState(window.location.pathname);
+  const [route] = useState(window.location.hash);
 
   const renderPage = () => {
 
     switch (route) {
-      case "/toolkit/privacy-policy":
+      case "#privacy-policy":
         return <PrivacyPolicy />;
       default:
         return <Panel />;
