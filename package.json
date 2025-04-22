@@ -8,7 +8,8 @@
     "dev": "vite",
     "start": "vite",
     "build": "tsc -b && vite build",
-    "build-extension": "tsc -b && vite build --config vite.config.extension.ts",
+    "build-extension": "tsc -b && vite build --config vite.config.extension.ts && npm run build:css",
+    "build:css": "npx @tailwindcss/cli -i src/index.css -o extension/assets/popup.css",
     "lint": "eslint .",
     "preview": "vite preview"
   },

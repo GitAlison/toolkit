@@ -136,7 +136,7 @@ export default function GenerateUUIDPage() {
                 </div>
 
             </div>
-            <div className="overflow-x-auto overflow-y-auto" style={{ maxHeight: 'calc(100vh - 300px)' }}>
+            <div className="overflow-x-auto overflow-y-auto table-container">
                 <table className="table table-xs table-zebra">
                     <tbody>
                         {lastCopy &&

@@ -55,7 +55,7 @@ function App() {
         <div className="modal" role="dialog">
           <div className="modal-box md:w-11/12 md:max-w-5xl md:h-9/10 md:max-h-9/10 max-h-screen h-screen w-full">
             <form method="dialog">
-              <label htmlFor='modal-feature' className="btn btn-sm btn-circle btn-ghost absolute right-0 top-0">✕</label>
+              <label htmlFor='modal-feature' className="btn btn-sm btn-secondary btn-circle absolute right-2 top-2 text-2xl">✕</label>
             </form>
             {selectedFeatureElement}
           </div>
